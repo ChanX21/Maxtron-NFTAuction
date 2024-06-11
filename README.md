@@ -13,6 +13,12 @@ This contract is an implementation of an NFT (Non-Fungible Token) auction system
 
 ## Deployed Contract : https://sepolia.etherscan.io/address/0x28e2e7060ffc454724a53c3602b3d458a39f9021
 
+URI JSON Data Should be of the format below 
+
+eg: https://gray-academic-grouse-23.mypinata.cloud/ipfs/QmP7PwNErUbPd52Cw61trgFMaYcDySk4YdKDUKC1mtTbQL
+
+![image](https://github.com/ChanX21/Maxtron-NFTAuction/assets/47290661/1bfa57ae-8235-489f-8023-5ec1c5517df9)
+
 
 ## Getting Started
 
