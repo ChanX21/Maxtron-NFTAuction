@@ -144,7 +144,7 @@ function App() {
 
   return (
     <div>
-      <h1>Maxtrox NFT Auction</h1>
+      <h1>Maxtron NFT Auction</h1>
       <button onClick={initContract}>Connect Wallet</button>
       <h2>Create Auction</h2>
       <input type="text" placeholder="Token ID" value={tokenId} onChange={(e) => setTokenId(e.target.value)} />
