@@ -152,21 +152,23 @@ function App() {
       <input type="text" placeholder="Starting Price" value={startingPrice} onChange={(e) => setStartingPrice(e.target.value)} />
       <DatePicker
         selected={auctionEndTime}
-        onChange={(date) => setAuctionEndTime(date)}
+        onChange={(date) =>{
+          setAuctionEndTime(date)
+        }}
         showTimeSelect
         dateFormat="MMMM d, yyyy h:mm aa"
         placeholderText="Auction End Time"
       />    
       <button onClick={createAuction}>Create Auction</button> <br></br>
       <button onClick={() => viewAuction(auctionedTokenId)}>View Auction</button>
-      {/* <input type="text" placeholder="Token ID" value={auctionedTokenId} onChange={(e) => setAuctionedTokenId(e.target.value)} /> */}
+      <input type="text" placeholder="Token ID" value={auctionedTokenId} onChange={(e) => setAuctionedTokenId(e.target.value)} />
       {auctionDetails && (
         <div>
-          <p>Starting Price: {ethers.formatEther(auctionDetails.startingPrice)}</p>
-          <p>Highest Bid: {ethers.formatEther(auctionDetails.highestBid)}</p>
+          <p>Starting Price: {ethers.formatEther(auctionDetails.startingPrice)} ETH</p>
+          <p>Highest Bid: {ethers.formatEther(auctionDetails.highestBid)} ETH</p>
           <p>Highest Bidder: {auctionDetails.highestBidder}</p>
           <p>Active: {auctionDetails.active ? 'Yes' : 'No'}</p>
-          <p>End Time: {new Date(auctionDetails.endTime * 1000).toLocaleString()}</p>
+          <p>End Time: {new Date(Number(auctionDetails.endTime)*1000).toLocaleString()}</p>
         </div>
       )}
       <h2>Place Bid</h2>
