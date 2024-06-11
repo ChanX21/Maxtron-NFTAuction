@@ -1,9 +1,10 @@
-# MaxtroxNFT Contract
+# MaxtronNFT Contract
 
 This contract is an implementation of an NFT (Non-Fungible Token) auction system on the Ethereum blockchain. It allows users to mint NFTs, create auctions for them, place bids, and end auctions.
 
-<a href="https://ibb.co/5BDmWN1"><img src="https://i.ibb.co/dG9F0df/Screenshot-2024-06-11-135150.png" alt="Screenshot-2024-06-11-135150" border="0"></a>
-![image](https://github.com/ChanX21/Maxtron-NFTAuction/assets/47290661/2a1cbaee-a58d-43ea-a3e3-0ce967c70aa1)
+![image](https://github.com/ChanX21/Maxtron-NFTAuction/assets/47290661/a43de8d2-4aa9-48c5-94fb-111343e708d6)
+
+![image](https://github.com/ChanX21/Maxtron-NFTAuction/assets/47290661/28db9215-d66b-4756-82c4-dd04759b7213)
 
 ## Features
 
@@ -16,14 +17,14 @@ This contract is an implementation of an NFT (Non-Fungible Token) auction system
 
 URI JSON Data Should be of the format below 
 
-eg: https://gray-academic-grouse-23.mypinata.cloud/ipfs/QmP7PwNErUbPd52Cw61trgFMaYcDySk4YdKDUKC1mtTbQL
+eg: https://gray-academic-grouse-23.mypinata.cloud/ipfs/QmPv9qXegLq99h6YT4eHdaqRHdC95fYqQiYNgASDd9Ph3f
 
-![image](https://github.com/ChanX21/Maxtron-NFTAuction/assets/47290661/1bfa57ae-8235-489f-8023-5ec1c5517df9)
+![image](https://github.com/ChanX21/Maxtron-NFTAuction/assets/47290661/f7628d8a-dfcd-4867-a7cb-93f82d3fa589)
 
 
 ## Getting Started
 
-To interact with the MaxtroxNFT contract, you can deploy it on the Ethereum blockchain or use an existing deployment. You'll need to use a tool like Remix, Hardhat, or Truffle to deploy the contract.
+To interact with the MaxtronNFT contract, you can deploy it on the Ethereum blockchain or use an existing deployment. You'll need to use a tool like Remix, Hardhat, or Truffle to deploy the contract.
 
 ## Usage
 
@@ -36,7 +37,7 @@ Here's how you can interact with the contract functions:
 
 ## Deployment
 
-You can deploy the MaxtroxNFT contract to the Ethereum blockchain using Remix, Hardhat, Truffle, or another Ethereum development tool. Make sure to set the appropriate parameters, such as gas limit and initial token supply.
+You can deploy the MaxtronNFT contract to the Ethereum blockchain using Remix, Hardhat, Truffle, or another Ethereum development tool. Make sure to set the appropriate parameters, such as gas limit and initial token supply.
 
 ## Contributing
 
