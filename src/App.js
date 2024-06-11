@@ -130,6 +130,18 @@ function App() {
     }
   };
 
+  // Function to end an auction
+  const endAuction = async (tokenId) => {
+    try {
+      const tx = await contract.endAuction(tokenId, { gasLimit: 300000 });
+      await tx.wait();
+      console.log("Auction ended successfully");
+    } catch (error) {
+      console.error("Error ending auction:", error);
+    }
+  };
+
+
   return (
     <div>
       <h1>Maxtrox NFT Auction</h1>
@@ -160,6 +172,9 @@ function App() {
       <input type="text" placeholder="Token ID" value={auctionedTokenId} onChange={(e) => setAuctionedTokenId(e.target.value)} />
       <input type="text" placeholder="Bid Amount" value={bidAmount} onChange={(e) => setBidAmount(e.target.value)} />
       <button onClick={placeBid}>Place Bid</button>
+      <h2>End Auction</h2>
+      <input type="text" placeholder="Token ID" value={tokenId} onChange={(e) => setTokenId(e.target.value)} />
+      <button onClick={() => endAuction(tokenId)}>End Auction</button>
       <h2>Mint NFT</h2>
       <input type="text" placeholder="Token URI" value={tokenURI} onChange={(e) => setTokenURI(e.target.value)} />
       <button onClick={mintNFT}>Mint NFT</button>
