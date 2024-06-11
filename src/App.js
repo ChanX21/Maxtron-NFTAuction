@@ -4,6 +4,7 @@ import { ethers } from "ethers";
 import MaxtroxNFT from "./hardhat/artifacts/contracts/Auction.sol/MaxtroxNFT.json";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import "./App.css"
 
 
 
