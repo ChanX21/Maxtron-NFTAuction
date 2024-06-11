@@ -1,126 +1,127 @@
-const {
-  time,
-  loadFixture,
-} = require("@nomicfoundation/hardhat-toolbox/network-helpers");
-const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
 const { expect } = require("chai");
+const { ethers } = require("hardhat");
 
-describe("Lock", function () {
-  // We define a fixture to reuse the same setup in every test.
-  // We use loadFixture to run this setup once, snapshot that state,
-  // and reset Hardhat Network to that snapshot in every test.
-  async function deployOneYearLockFixture() {
-    const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-    const ONE_GWEI = 1_000_000_000;
+describe("MaxtroxNFT", function () {
+  let MaxtroxNFT, maxtroxNFT, owner, addr1, addr2;
 
-    const lockedAmount = ONE_GWEI;
-    const unlockTime = (await time.latest()) + ONE_YEAR_IN_SECS;
+  beforeEach(async function () {
+    MaxtroxNFT = await ethers.deployContract("MaxtroxNFT");
 
-    // Contracts are deployed using the first signer/account by default
-    const [owner, otherAccount] = await ethers.getSigners();
+    [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
+  });
 
-    const Lock = await ethers.getContractFactory("Lock");
-    const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  describe("Minting NFTs", function () {
+    it("Should mint a new NFT and assign it to the owner", async function () {
+      const tokenURI = "https://example.com/token1";
+      await expect(maxtroxNFT.mintNFT(tokenURI))
+        .to.emit(maxtroxNFT, "NFTMinted")
+        .withArgs(1, owner.address, tokenURI);
 
-    return { lock, unlockTime, lockedAmount, owner, otherAccount };
-  }
-
-  describe("Deployment", function () {
-    it("Should set the right unlockTime", async function () {
-      const { lock, unlockTime } = await loadFixture(deployOneYearLockFixture);
-
-      expect(await lock.unlockTime()).to.equal(unlockTime);
-    });
-
-    it("Should set the right owner", async function () {
-      const { lock, owner } = await loadFixture(deployOneYearLockFixture);
-
-      expect(await lock.owner()).to.equal(owner.address);
-    });
-
-    it("Should receive and store the funds to lock", async function () {
-      const { lock, lockedAmount } = await loadFixture(
-        deployOneYearLockFixture
-      );
-
-      expect(await ethers.provider.getBalance(lock.target)).to.equal(
-        lockedAmount
-      );
-    });
-
-    it("Should fail if the unlockTime is not in the future", async function () {
-      // We don't use the fixture here because we want a different deployment
-      const latestTime = await time.latest();
-      const Lock = await ethers.getContractFactory("Lock");
-      await expect(Lock.deploy(latestTime, { value: 1 })).to.be.revertedWith(
-        "Unlock time should be in the future"
-      );
+      expect(await maxtroxNFT.ownerOf(1)).to.equal(owner.address);
     });
   });
 
-  describe("Withdrawals", function () {
-    describe("Validations", function () {
-      it("Should revert with the right error if called too soon", async function () {
-        const { lock } = await loadFixture(deployOneYearLockFixture);
+  describe("Creating Auctions", function () {
+    it("Should allow the owner to create an auction", async function () {
+      const tokenURI = "https://example.com/token1";
+      await maxtroxNFT.mintNFT(tokenURI);
+      const tokenId = 1;
+      const startingPrice = ethers.utils.parseEther("1");
+      const duration = 3600; // 1 hour
 
-        await expect(lock.withdraw()).to.be.revertedWith(
-          "You can't withdraw yet"
-        );
-      });
-
-      it("Should revert with the right error if called from another account", async function () {
-        const { lock, unlockTime, otherAccount } = await loadFixture(
-          deployOneYearLockFixture
-        );
-
-        // We can increase the time in Hardhat Network
-        await time.increaseTo(unlockTime);
-
-        // We use lock.connect() to send a transaction from another account
-        await expect(lock.connect(otherAccount).withdraw()).to.be.revertedWith(
-          "You aren't the owner"
-        );
-      });
-
-      it("Shouldn't fail if the unlockTime has arrived and the owner calls it", async function () {
-        const { lock, unlockTime } = await loadFixture(
-          deployOneYearLockFixture
+      await expect(maxtroxNFT.createAuction(tokenId, startingPrice, duration))
+        .to.emit(maxtroxNFT, "AuctionCreated")
+        .withArgs(
+          tokenId,
+          startingPrice,
+          (await ethers.provider.getBlock("latest")).timestamp + duration
         );
 
-        // Transactions are sent using the first signer by default
-        await time.increaseTo(unlockTime);
-
-        await expect(lock.withdraw()).not.to.be.reverted;
-      });
+      const auction = await maxtroxNFT.auctions(tokenId);
+      expect(auction.active).to.be.true;
     });
 
-    describe("Events", function () {
-      it("Should emit an event on withdrawals", async function () {
-        const { lock, unlockTime, lockedAmount } = await loadFixture(
-          deployOneYearLockFixture
-        );
+    it("Should not allow non-owners to create an auction", async function () {
+      const tokenURI = "https://example.com/token1";
+      await maxtroxNFT.mintNFT(tokenURI);
+      const tokenId = 1;
+      const startingPrice = ethers.utils.parseEther("1");
+      const duration = 3600; // 1 hour
 
-        await time.increaseTo(unlockTime);
+      await expect(
+        maxtroxNFT
+          .connect(addr1)
+          .createAuction(tokenId, startingPrice, duration)
+      ).to.be.revertedWith("Only the owner of the token can create an auction");
+    });
+  });
 
-        await expect(lock.withdraw())
-          .to.emit(lock, "Withdrawal")
-          .withArgs(lockedAmount, anyValue); // We accept any value as `when` arg
-      });
+  describe("Placing Bids", function () {
+    it("Should allow users to place bids", async function () {
+      const tokenURI = "https://example.com/token1";
+      await maxtroxNFT.mintNFT(tokenURI);
+      const tokenId = 1;
+      const startingPrice = ethers.utils.parseEther("1");
+      const duration = 3600; // 1 hour
+
+      await maxtroxNFT.createAuction(tokenId, startingPrice, duration);
+
+      await expect(
+        maxtroxNFT
+          .connect(addr1)
+          .placeBid(tokenId, { value: ethers.utils.parseEther("2") })
+      )
+        .to.emit(maxtroxNFT, "BidPlaced")
+        .withArgs(tokenId, addr1.address, ethers.utils.parseEther("2"));
+
+      const auction = await maxtroxNFT.auctions(tokenId);
+      expect(auction.highestBid).to.equal(ethers.utils.parseEther("2"));
+      expect(auction.highestBidder).to.equal(addr1.address);
     });
 
-    describe("Transfers", function () {
-      it("Should transfer the funds to the owner", async function () {
-        const { lock, unlockTime, lockedAmount, owner } = await loadFixture(
-          deployOneYearLockFixture
-        );
+    it("Should reject bids lower than the current highest bid", async function () {
+      const tokenURI = "https://example.com/token1";
+      await maxtroxNFT.mintNFT(tokenURI);
+      const tokenId = 1;
+      const startingPrice = ethers.utils.parseEther("1");
+      const duration = 3600; // 1 hour
 
-        await time.increaseTo(unlockTime);
+      await maxtroxNFT.createAuction(tokenId, startingPrice, duration);
 
-        await expect(lock.withdraw()).to.changeEtherBalances(
-          [owner, lock],
-          [lockedAmount, -lockedAmount]
-        );
-      });
+      await maxtroxNFT
+        .connect(addr1)
+        .placeBid(tokenId, { value: ethers.utils.parseEther("2") });
+
+      await expect(
+        maxtroxNFT
+          .connect(addr2)
+          .placeBid(tokenId, { value: ethers.utils.parseEther("1.5") })
+      ).to.be.revertedWith("Bid must be higher than current highest bid");
+    });
+  });
+
+  describe("Ending Auctions", function () {
+    it("Should allow the owner to end an auction", async function () {
+      const tokenURI = "https://example.com/token1";
+      await maxtroxNFT.mintNFT(tokenURI);
+      const tokenId = 1;
+      const startingPrice = ethers.utils.parseEther("1");
+      const duration = 3600; // 1 hour
+
+      await maxtroxNFT.createAuction(tokenId, startingPrice, duration);
+
+      await maxtroxNFT
+        .connect(addr1)
+        .placeBid(tokenId, { value: ethers.utils.parseEther("2") });
+
+      await ethers.provider.send("evm_increaseTime", [duration + 1]);
+      await ethers.provider.send("evm_mine");
+
+      await expect(maxtroxNFT.endAuction(tokenId))
+        .to.emit(maxtroxNFT, "AuctionEnded")
+        .withArgs(tokenId, addr1.address, ethers.utils.parseEther("2"));
+
+      expect(await maxtroxNFT.ownerOf(tokenId)).to.equal(addr1.address);
     });
   });
 });
