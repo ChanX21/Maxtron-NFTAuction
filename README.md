@@ -11,6 +11,9 @@ This contract is an implementation of an NFT (Non-Fungible Token) auction system
 - **Place Bid**: Users can place bids on active auctions.
 - **End Auction**: NFT owners can end auctions manually, transferring the token to the highest bidder and collecting the bid amount.
 
+## Deployed Contract : https://sepolia.etherscan.io/address/0x28e2e7060ffc454724a53c3602b3d458a39f9021
+
+
 ## Getting Started
 
 To interact with the MaxtroxNFT contract, you can deploy it on the Ethereum blockchain or use an existing deployment. You'll need to use a tool like Remix, Hardhat, or Truffle to deploy the contract.
