@@ -21,6 +21,12 @@ body {
 }
 
 h1 {
+  font-family: 'Montserrat', sans-serif; /* Montserrat font */
+  font-size: 48px; /* Adjust size as needed */
+  font-weight: bold;
+  text-transform: uppercase; /* Uppercase letters for emphasis */
+  letter-spacing: 2px; /* Adjust letter spacing for a modern look */
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1); /* Optional shadow for depth */
   color: #4b0082;
 }
 
