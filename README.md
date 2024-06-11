@@ -3,6 +3,7 @@
 This contract is an implementation of an NFT (Non-Fungible Token) auction system on the Ethereum blockchain. It allows users to mint NFTs, create auctions for them, place bids, and end auctions.
 
 <a href="https://ibb.co/5BDmWN1"><img src="https://i.ibb.co/dG9F0df/Screenshot-2024-06-11-135150.png" alt="Screenshot-2024-06-11-135150" border="0"></a>
+![image](https://github.com/ChanX21/Maxtron-NFTAuction/assets/47290661/2a1cbaee-a58d-43ea-a3e3-0ce967c70aa1)
 
 ## Features
 
