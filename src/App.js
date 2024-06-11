@@ -112,17 +112,16 @@ function App() {
    // Function to view NFT metadata
    const viewNFT = async () => {
     try {
-      console.log("Token Id:", tokenId);
 
-      const metadata = await contract.tokenURI("1");
-      console.log("NFT metadata:", metadata);
+      const metadata = await contract.tokenURI(tokenId);
       const response = await fetch(metadata);
-      console.log(response);
       const jsonData = await response.json();
+  
+      
+      const name = jsonData.name;
+      const description = jsonData.description;
+      const pictureUrl = jsonData.image;
 
-      // You can parse metadata JSON to extract name, description, and picture URL
-      // For simplicity, let's assume metadata is in JSON format
-      const { name, description, pictureUrl } = jsonData.parse(metadata);
       setNftName(name);
       setNftDescription(description);
       setNftPictureUrl(pictureUrl);
