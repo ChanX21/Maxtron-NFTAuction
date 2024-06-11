@@ -2,6 +2,8 @@
 
 This contract is an implementation of an NFT (Non-Fungible Token) auction system on the Ethereum blockchain. It allows users to mint NFTs, create auctions for them, place bids, and end auctions.
 
+<a href="https://ibb.co/5BDmWN1"><img src="https://i.ibb.co/dG9F0df/Screenshot-2024-06-11-135150.png" alt="Screenshot-2024-06-11-135150" border="0"></a>
+
 ## Features
 
 - **Mint NFT**: Users can mint new NFTs with associated metadata.
